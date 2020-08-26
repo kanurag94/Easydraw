@@ -4,8 +4,7 @@ Easy draw is a pure JS written plotting tool with draggable cartesian grid. Draw
 
 Live at: [Easydraw](http://kanurag94.github.io/Easydraw)
 
-![easydraw screen](https://github.com/kanurag94/Easydraw/tree/master/static/images/1.png)
-![easydraw screen](https://github.com/kanurag94/Easydraw/tree/master/static/images/2.png)
+![easydraw _screen1](https://github.com/kanurag94/Easydraw/blob/master/static/images/1.png)
 
 ## How to Run?
 Clone this repository
