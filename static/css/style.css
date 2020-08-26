@@ -1,0 +1,9 @@
+button {
+  text-align: center;
+  position: relative;
+  color: black;
+  background-color: lightblue;
+  padding: 10px;
+  margin: 5px;
+  font-family: "Courier New", Courier, monospace;
+}

@@ -1,7 +1,7 @@
 const ctx = canvas.getContext("2d");
 requestAnimationFrame(animate);
-var w = canvas.width;
-var h = canvas.height;
+var w = canvas.clientWidth;
+var h = canvas.clientHeight;
 
 const mouse = {
   x: 0,
@@ -19,6 +19,13 @@ const lines = {
   y: [],
 };
 
+const allLines = {
+  line: {
+    x: [],
+    y: [],
+  },
+};
+
 const panZoom = {
   x: 0,
   y: 0,
@@ -33,7 +40,45 @@ const panZoom = {
   },
 };
 
-function btnClkEvent(e) {
+function undoLineSet(e) {
+  const oldlines = {
+    x: [],
+    y: [],
+  };
+  for (let i = 0; i < lines.x.length - 2; i++) {
+    oldlines.x.push(lines.x[i]);
+    oldlines.y.push(lines.y[i]);
+  }
+  lines.x = oldlines.x;
+  lines.y = oldlines.y;
+}
+
+function resetLineSet(e) {
+  lines.x = [];
+  lines.y = [];
+}
+
+function newLineSet(e) {
+  const oldlines = {
+    x: [],
+    y: [],
+  };
+  for (let i = 0; i < lines.x.length - 1; i++) {
+    oldlines.x.push(lines.x[i]);
+    oldlines.y.push(lines.y[i]);
+  }
+  lines.x = oldlines.x;
+  lines.y = oldlines.y;
+  allLines.line.x.push(lines.x);
+  allLines.line.y.push(lines.y);
+  console.log(allLines);
+  lines.x = [];
+  lines.y = [];
+}
+
+function resetEverything() {
+  allLines.line.x = [];
+  allLines.line.y = [];
   lines.x = [];
   lines.y = [];
 }
@@ -45,6 +90,7 @@ function mouseEvents(e) {
   if (e.type === "mousedown" && e.ctrlKey) {
     mouse.button = true;
   } else if (e.type === "mousedown") {
+    mouse.button = true;
     mouse.draw = true;
     drawLine();
   } else if (e.type === "mouseup") {
@@ -102,10 +148,18 @@ function animate() {
 
   ctx.beginPath();
   ctx.lineWidth = 5;
+  for (let i = 0; i < allLines.line.x.length; i++) {
+    for (let j = 0; j < allLines.line.x[i].length - 1; j++) {
+      ctx.moveTo(allLines.line.x[i][j], allLines.line.y[i][j]);
+      ctx.lineTo(allLines.line.x[i][j + 1], allLines.line.y[i][j + 1]);
+    }
+  }
+
   for (let j = 0; j < lines.x.length - 1; j++) {
     ctx.moveTo(lines.x[j], lines.y[j]);
     ctx.lineTo(lines.x[j + 1], lines.y[j + 1]);
   }
+
   ctx.stroke();
   ctx.closePath();
 
