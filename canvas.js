@@ -11,6 +11,12 @@ const mouse = {
   lastX: 0,
   lastY: 0,
   drag: false,
+  draw: false,
+};
+
+const lines = {
+  x: [],
+  y: [],
 };
 
 const panZoom = {
@@ -27,12 +33,24 @@ const panZoom = {
   },
 };
 
+function btnClkEvent(e) {
+  lines.x = [];
+  lines.y = [];
+}
+
 function mouseEvents(e) {
   const boundingRect = canvas.getBoundingClientRect();
   mouse.x = e.clientX - boundingRect.left;
   mouse.y = e.clientY - boundingRect.top;
-  mouse.button =
-    e.type === "mousedown" ? true : e.type === "mouseup" ? false : mouse.button;
+  if (e.type === "mousedown" && e.ctrlKey) {
+    mouse.button = true;
+  } else if (e.type === "mousedown") {
+    mouse.draw = true;
+    drawLine();
+  } else if (e.type === "mouseup") {
+    mouse.button = false;
+    mouse.draw = false;
+  }
   if (e.type === "wheel") {
     mouse.wheel += -e.deltaY;
     e.preventDefault();
@@ -42,6 +60,14 @@ function mouseEvents(e) {
 ["mousedown", "mouseup", "mousemove", "wheel"].forEach((name) =>
   document.addEventListener(name, mouseEvents)
 );
+
+function drawLine() {
+  if (mouse.draw) {
+    lines.x.push(mouse.x);
+    lines.y.push(mouse.y);
+    mouse.draw = false;
+  }
+}
 
 function drawGrid() {
   const scale = 1 / panZoom.scale;
@@ -58,13 +84,14 @@ function drawGrid() {
     ctx.lineTo(x + i, y + size);
     ctx.moveTo(x, y + i);
     ctx.lineTo(x + size, y + i);
-    ctx.fillText((x + i, y + i), x + i, y + i);
   }
   ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset
   ctx.stroke();
+  ctx.closePath();
 }
 
 function animate() {
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
   // Resize canvas to screen
   if (w !== innerWidth || h !== innerHeight) {
     w = canvas.width = innerWidth;
@@ -72,6 +99,15 @@ function animate() {
   } else {
     ctx.clearRect(0, 0, w, h);
   }
+
+  ctx.beginPath();
+  ctx.lineWidth = 5;
+  for (let j = 0; j < lines.x.length - 1; j++) {
+    ctx.moveTo(lines.x[j], lines.y[j]);
+    ctx.lineTo(lines.x[j + 1], lines.y[j + 1]);
+  }
+  ctx.stroke();
+  ctx.closePath();
 
   if (mouse.wheel !== 0) {
     let scale = 1;
