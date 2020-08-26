@@ -83,6 +83,30 @@ function resetEverything() {
   lines.y = [];
 }
 
+function drawAxis() {
+  newLineSet();
+
+  // Y axis
+  lines.x.push(w / 2);
+  lines.x.push(w / 2);
+  lines.y.push(0);
+  lines.y.push(h);
+  allLines.line.x.push(lines.x);
+  allLines.line.y.push(lines.y);
+
+  newLineSet();
+
+  // X axis
+  lines.x.push(0);
+  lines.x.push(w);
+  lines.y.push(h / 2);
+  lines.y.push(h / 2);
+  allLines.line.x.push(lines.x);
+  allLines.line.y.push(lines.y);
+
+  newLineSet();
+}
+
 function mouseEvents(e) {
   const boundingRect = canvas.getBoundingClientRect();
   mouse.x = e.clientX - boundingRect.left;
