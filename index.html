@@ -8,16 +8,20 @@
   </head>
   <body>
     <div>
+      <button id="newLineSetButton" onclick="newLineSet()">New Line Set</button>
       <button id="undoLineSetButton" onclick="undoLineSet()">
         Undo Line Set
       </button>
       <button id="resetLineSetButton" onclick="resetLineSet()">
         Reset Line Set
       </button>
-      <button id="newLineSetButton" onclick="newLineSet()">New Line Set</button>
+      <button id="eraseLastLineSet" onclick="eraseLastLineSet()">
+        Erase Last Line Set
+      </button>
       <button id="resetEverything" onclick="resetEverything()">
         Reset Everything
       </button>
+
       <button
         id="useAxes"
         onclick="drawAxis()"

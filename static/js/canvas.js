@@ -40,12 +40,12 @@ const panZoom = {
   },
 };
 
-function undoLineSet(e) {
+function undoLineSet(n = 1) {
   const oldlines = {
     x: [],
     y: [],
   };
-  for (let i = 0; i < lines.x.length - 2; i++) {
+  for (let i = 0; i < lines.x.length - 1 - n; i++) {
     oldlines.x.push(lines.x[i]);
     oldlines.y.push(lines.y[i]);
   }
@@ -59,21 +59,29 @@ function resetLineSet(e) {
 }
 
 function newLineSet(e) {
-  const oldlines = {
-    x: [],
-    y: [],
-  };
-  for (let i = 0; i < lines.x.length - 1; i++) {
-    oldlines.x.push(lines.x[i]);
-    oldlines.y.push(lines.y[i]);
-  }
-  lines.x = oldlines.x;
-  lines.y = oldlines.y;
+  undoLineSet(0);
   allLines.line.x.push(lines.x);
   allLines.line.y.push(lines.y);
-  console.log(allLines);
   lines.x = [];
   lines.y = [];
+}
+
+function eraseLastLineSet(e) {
+  const allLinesOld = {
+    line: {
+      x: [],
+      y: [],
+    },
+  };
+  allLinesOld.line.x = allLines.line.x;
+  allLinesOld.line.y = allLines.line.y;
+  allLines.line.x = [];
+  allLines.line.y = [];
+  for (let i = 0; i < allLinesOld.line.x.length - 1; i++) {
+    allLines.line.x.push(allLinesOld.line.x[i]);
+    allLines.line.y.push(allLinesOld.line.y[i]);
+  }
+  undoLineSet(0);
 }
 
 function resetEverything() {
